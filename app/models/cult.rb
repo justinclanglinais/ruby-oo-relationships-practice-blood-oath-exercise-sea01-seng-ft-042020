@@ -1,5 +1,6 @@
 class Cult
   # Get a cult's name, location, founding year and slogan
+  attr_accessor :minimum_age
   attr_reader :name, :location, :founding_year, :slogan
 
   # Keep track of all followers
@@ -11,6 +12,7 @@ class Cult
     @location = location
     @founding_year = founding_year
     @slogan = slogan
+    @minimum_age = 22
     # Add the newly created follower to the list of all of the followers
     @@all << self
   end
@@ -23,7 +25,12 @@ class Cult
   # Take an instance of follower and add it to that cult's list of followers
   def recruit_follower(follower)
     # Create a new bloodoath that belongs to this cult and the follower we were given
-    BloodOath.new(initiation_date: Time.now, cult: self, follower: follower)
+    if follower.age>=self.minimum_age
+      BloodOath.new(initiation_date: Time.now, cult: self, follower: follower)
+    else
+      diff = minimum_age - follower.age
+      puts "Sorry, you're too young to pledge your soul to #{self.name}!  Try again in #{diff} years!"
+    end
   end
 
   # Get all of the blood oaths this cult has
@@ -67,7 +74,25 @@ class Cult
     @@all.min_by {|cult| cult.cult_population }
   end
 
+  def self.most_common_location
+    # map every cult.location into an array
+    # iterate over that array for count(location)
+    # use max_by to return highest occurring location
+    locations = all.select{|cult|cult.location}
+    locations.max_by{|loc|locations.count(loc)}
+  end
 
-
-
+  def average_age
+    # binding.pry
+    # sum all self.followers age
+    # count all self.followers
+    # divide sum by count
+    self.followers.map{|ppl|ppl.age}.inject{|sum,age|sum + age}.to_f/(self.follower.count)
+  end
+  def my_followers_mottos
+    # MAP self.followers
+    # iterate through each of this cult's followers
+    # puts each follower's motto
+    self.followers.map{|ppl|puts"#{ppl.life_motto}"}
+  end
 end

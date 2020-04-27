@@ -1,6 +1,6 @@
 class BloodOath
   # Get a blood oath's initiation date or the cult or follower it belongs to
-  attr_reader :cult, :follower
+  attr_reader :initiation_date, :cult, :follower
 
   # Keep track of all blood oaths
   @@all = []
@@ -19,5 +19,7 @@ class BloodOath
     @@all
   end
 
-
+  def self.first_oath
+    all.sort_by{|bo|bo.initiation_date}[0].follower
+  end
 end
